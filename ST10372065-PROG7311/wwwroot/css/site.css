@@ -44,6 +44,7 @@ body {
     transition: 0.3s;
     z-index: 1000;
     border-bottom-right-radius: 10px;
+    overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 .nav-active {
