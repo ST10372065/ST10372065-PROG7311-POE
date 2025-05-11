@@ -1,0 +1,132 @@
+:root {
+    --primary-green: #4CAF50;
+    --secondary-green: #388E3C;
+    --light-green: #C8E6C9;
+    --dark-green: #2E7D32;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+/* Modified CSS */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Focus styles */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* Sliding Navigation */
+.nav-container {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 50%;
+    background: var(--primary-green);
+    transition: 0.3s;
+    z-index: 1000;
+    border-bottom-right-radius: 10px;
+}
+
+.nav-active {
+    left: 0;
+}
+
+.nav-menu {
+    padding: 20px;
+    list-style: none;
+}
+
+    .nav-menu li {
+        margin: 15px 0;
+    }
+
+    .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.1em;
+        transition: 0.2s;
+    }
+
+        .nav-menu a:hover {
+            color: var(--light-green);
+        }
+
+.menu-toggle {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    color: var(--primary-green);
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto; /* Centers vertically when combined with body flex */
+    text-align: center;
+}
+
+.hero-section {
+    max-width: 800px;
+    margin: 0 auto 30px; /* Centered horizontally with bottom margin */
+    padding: 30px 20px;
+    background: var(--light-green);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto; /* Center grid container */
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    height: 100%; /* Ensure all cards have the same height */
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        color: var(--secondary-green);
+        margin-top: 0;
+    }
+
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: white;
+    cursor: pointer;
+}

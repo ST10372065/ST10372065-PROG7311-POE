@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Agri-Energy Connect</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="menu-toggle">☰</div>
+
+    <nav class="nav-container">
+        <div class="close-btn">×</div>
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="/Home/Products">Products</a></li>
+            <li><a href="/Home/Login">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div class="hero-section">
+            <h1>Welcome to Agri-Energy Connect</h1>
+            <p>Collaborative platform for sustainable agriculture and renewable energy solutions</p>
+        </div>
+
+        <div class="feature-cards">
+            <div class="card">
+                <h3>Sustainable Farming Hub</h3>
+                <p>Access best practices in organic farming, water conservation, and soil health through our interactive forums and resource center.</p>
+            </div>
+
+            <div class="card">
+                <h3>Green Energy Marketplace</h3>
+                <p>Discover solar-powered irrigation systems, wind turbines, and biogas solutions tailored for agricultural needs.</p>
+            </div>
+
+            <div class="card">
+                <h3>Education & Training</h3>
+                <p>Participate in online courses and workshops on integrating renewable energy technologies into farming practices.</p>
+            </div>
+
+            <div class="card">
+                <h3>Project Collaboration</h3>
+                <p>Connect with experts and access funding opportunities for joint sustainable agriculture initiatives.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navContainer = document.querySelector('.nav-container');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const closeBtn = document.querySelector('.close-btn');
+
+        menuToggle.addEventListener('click', () => {
+            navContainer.classList.add('nav-active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            navContainer.classList.remove('nav-active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navContainer.contains(e.target) && !menuToggle.contains(e.target)) {
+                navContainer.classList.remove('nav-active');
+            }
+        });
+    </script>
+</body>
+</html>
