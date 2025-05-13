@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using ST10372065_PROG7311.Models;
 using ST10372065_PROG7311.Services;
@@ -29,31 +31,56 @@ namespace ST10372065_PROG7311.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            // Add your login logic here
-            if (email == "test@example.com" && password == "password")
+            var user = await _userService.ValidateUserAsync(email, password);
+
+            if (user != null)
             {
-                // Redirect or return success
-                return RedirectToAction("HomePage");
+                // Return success response
+                return Json(new { success = true, redirectUrl = Url.Action("Products", "Home") });
             }
 
-            // Return an error message or reload the modal
-            ViewBag.ErrorMessage = "Invalid email or password.";
-            return View();
+            // Return error response
+            return Json(new { success = false, errorMessage = "Invalid email or password." });
         }
-
 
         public IActionResult HomePage()
         {
             return View();
         }
 
-        public IActionResult Products()
+        [HttpGet]
+        public async Task<IActionResult> Products()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            var products = await _userService.GetAllProductsAsync(); // Fetch all products
+            ViewBag.Products = products;
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(Product product)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userService.GetByEmailAsync(User.Identity.Name); // Get the logged-in user
+                product.UserId = user.UserId;
+                await _userService.AddProductAsync(product);
+                return RedirectToAction("Products");
+            }
+
+            return View("Products");
+        }
 
         public async Task<IActionResult> Privacy()
         {

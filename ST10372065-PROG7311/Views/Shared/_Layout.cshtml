@@ -9,31 +9,6 @@
     <link rel="stylesheet" href="~/ST10372065_PROG7311.styles.css" asp-append-version="true" />
 </head>
 <body>
-    @*<header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Login">ST10372065_PROG7311</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Products">Products</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>*@
-
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -43,14 +18,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="Login" method="post">
+                    <div id="loginError" class="alert alert-danger d-none"></div>
+                    <form id="loginForm" asp-controller="Home" asp-action="Login" method="post">
                         <div class="mb-3">
                             <label for="Email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="Email" name="Email" required />
+                            <input type="email" class="form-control" id="Email" name="email" required />
                         </div>
                         <div class="mb-3">
                             <label for="Password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="Password" name="Password" required />
+                            <input type="password" class="form-control" id="Password" name="password" required />
                         </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
@@ -58,7 +34,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -68,7 +43,36 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const loginError = document.getElementById("loginError");
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Redirect to the specified URL
+                    window.location.href = result.redirectUrl;
+                } else {
+                    // Display the error message
+                    loginError.textContent = result.errorMessage;
+                    loginError.classList.remove("d-none");
+                }
+            } catch (error) {
+                loginError.textContent = "An unexpected error occurred. Please try again.";
+                loginError.classList.remove("d-none");
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

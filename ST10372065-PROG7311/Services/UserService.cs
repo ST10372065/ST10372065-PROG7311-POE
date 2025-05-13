@@ -24,6 +24,29 @@ namespace ST10372065_PROG7311.Services
             _logger.LogInformation("User added: {user}", user);
         }
 
+        public async Task<User?> ValidateUserAsync(string email, string password)
+        {
+            // Check if a user with the given email and password exists
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+        }
+
+        public async Task<List<Product>> GetAllProductsAsync()
+        {
+            return await _context.Products.Include(p => p.User).ToListAsync();
+        }
+
+        public async Task AddProductAsync(Product product)
+        {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<User?> GetByIdAsync(int id) => await _context.Users.FindAsync(id);
 
         public async Task UpdateAsync(User user)
