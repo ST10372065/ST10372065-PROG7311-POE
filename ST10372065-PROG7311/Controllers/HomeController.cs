@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using ST10372065_PROG7311.Models;
 using ST10372065_PROG7311.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ST10372065_PROG7311.Controllers
 {
@@ -19,18 +20,28 @@ namespace ST10372065_PROG7311.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         public async Task<IActionResult> CreateUser(User user)
         {
-            // Log the user creation attempt
             if (ModelState.IsValid)
             {
-                // Log the user details
                 await _userService.AddAsync(user);
-                return RedirectToAction("Index");
+                return RedirectToAction("HomePage");
             }
-            return View("Index");
+            // Log validation errors
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    _logger.LogError("ModelState error for {Key}: {ErrorMessage}", key, error.ErrorMessage);
+                }
+            }
+            return RedirectToAction("HomePage");
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
@@ -102,7 +113,7 @@ namespace ST10372065_PROG7311.Controllers
             return View();
         }
 
-
+        [Authorize(Roles = "Farmer")]
         [HttpPost]
         public async Task<IActionResult> AddProduct(
         [FromForm] string ProductName,

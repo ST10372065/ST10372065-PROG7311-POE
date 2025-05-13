@@ -10,8 +10,10 @@ namespace ST10372065_PROG7311.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
 
+        [Required]
+        [RegularExpression("^(Farmer|Employee)$", ErrorMessage = "Role must be either 'Farmer' or 'Employee'.")]
+        public string Role { get; set; }
         public ICollection<Product> Products { get; set; } = new List<Product>();
 
     }

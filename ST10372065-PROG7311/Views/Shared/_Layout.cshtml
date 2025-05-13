@@ -32,42 +32,56 @@
             {
                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
             }
-            
+            @* Register Farmer link for Employees *@
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
+            {
+                <li>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#registerFarmerModal">Register Farmer</a>
+                </li>
+            }
         </ul>
     </nav>
-    @* <header> *@
-    @*     <nav class="navbar navbar-expand-lg navbar-light bg-light"> *@
-    @*         <div class="container-fluid"> *@
-    @*             <a class="navbar-brand" href="/">Agri-Energy Connect</a> *@
-    @*             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> *@
-    @*                 <span class="navbar-toggler-icon"></span> *@
-    @*             </button> *@
-    @*             <div class="collapse navbar-collapse" id="navbarNav"> *@
-    @*                 <ul class="navbar-nav ms-auto"> *@
-    @*                     @if (User.Identity.IsAuthenticated) *@
-    @*                     { *@
-    @*                         <li class="nav-item"> *@
-    @*                             <span class="nav-link">Welcome, @User.Identity.Name!</span> *@
-    @*                         </li> *@
-    @*                         <li class="nav-item"> *@
-    @*                             <form asp-controller="Home" asp-action="Logout" method="post" style="display:inline;"> *@
-    @*                                 <button type="submit" class="btn btn-link nav-link">Logout</button> *@
-    @*                             </form> *@
-    @*                         </li> *@
-    @*                     } *@
-    @*                     else *@
-    @*                     { *@
-    @*                         <li class="nav-item"> *@
-    @*                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button> *@
-    @*                         </li> *@
-    @*                     } *@
-    @*                 </ul> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </nav> *@
-    @* </header> *@
 
-
+    @* Register Farmer Modal (only for Employees) *@
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
+    {
+        <div class="modal fade" id="registerFarmerModal" tabindex="-1" aria-labelledby="registerFarmerModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerFarmerModalLabel">Register Farmer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="registerFarmerError" class="alert alert-danger d-none"></div>
+                        <form id="registerFarmerForm" asp-controller="Home" asp-action="CreateUser" method="post">
+                            <div class="mb-3">
+                                <label for="FirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="FirstName" name="FirstName" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="LastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="LastName" name="LastName" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="Email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="Email" name="Email" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="Password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="Password" name="Password" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="Role" class="form-label">Role</label>
+                                <input type="text" class="form-control" id="Role" name="Role" value="Farmer" readonly />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register Farmer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     @*login modal, this is the pop up that appears when a usser clicks login.*@
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -132,6 +146,42 @@
                 loginError.classList.remove("d-none");
             }
         });
+
+        // Optional: AJAX for Register Farmer (similar to login)
+        // const registerFarmerForm = document.getElementById("registerFarmerForm");
+        // if (registerFarmerForm) {
+        //     registerFarmerForm.addEventListener("submit", async function (e) {
+        //         e.preventDefault();
+
+        //         const form = e.target;
+        //         const formData = new FormData(form);
+        //         const errorDiv = document.getElementById("registerFarmerError");
+
+        //         try {
+        //             const response = await fetch(form.action, {
+        //                 method: "POST",
+        //                 body: formData
+        //             });
+
+        //             if (response.redirected) {
+        //                 If the server redirects, reload the page
+        //                 window.location.href = response.url;
+        //                 return;
+        //             }
+
+        //             If you return JSON, handle it here
+        //             const result = await response.json();
+        //             if (result.success) { ... }
+
+        //             For now, just close the modal on success
+        //             $('#registerFarmerModal').modal('hide');
+        //             location.reload();
+        //         } catch (error) {
+        //             errorDiv.textContent = "An unexpected error occurred. Please try again.";
+        //             errorDiv.classList.remove("d-none");
+        //         }
+        //     });
+        // }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

@@ -19,10 +19,20 @@ namespace ST10372065_PROG7311.Services
 
         public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("User added: {user}", user);
+            _logger.LogInformation("Database path: {Path}", _context.Database.GetDbConnection().DataSource);
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("User added: {@User}", user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving user");
+                throw;
+            }
         }
+
 
         public async Task<User?> ValidateUserAsync(string email, string password)
         {
