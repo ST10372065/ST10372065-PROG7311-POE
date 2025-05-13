@@ -9,6 +9,66 @@
     <link rel="stylesheet" href="~/ST10372065_PROG7311.styles.css" asp-append-version="true" />
 </head>
 <body>
+
+    <div class="menu-toggle">☰</div>
+
+    <nav class="nav-container">
+        <div class="close-btn">×</div>
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="/Home/Products">Products</a></li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    <span class="nav-link">Welcome, @User.FindFirst("FirstName")?.Value!</span>
+                </li>
+                <li>
+                    <form asp-controller="Home" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                    </form>
+                </li>
+            }
+            else
+            {
+                <li><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
+            }
+            
+        </ul>
+    </nav>
+    @* <header> *@
+    @*     <nav class="navbar navbar-expand-lg navbar-light bg-light"> *@
+    @*         <div class="container-fluid"> *@
+    @*             <a class="navbar-brand" href="/">Agri-Energy Connect</a> *@
+    @*             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> *@
+    @*                 <span class="navbar-toggler-icon"></span> *@
+    @*             </button> *@
+    @*             <div class="collapse navbar-collapse" id="navbarNav"> *@
+    @*                 <ul class="navbar-nav ms-auto"> *@
+    @*                     @if (User.Identity.IsAuthenticated) *@
+    @*                     { *@
+    @*                         <li class="nav-item"> *@
+    @*                             <span class="nav-link">Welcome, @User.Identity.Name!</span> *@
+    @*                         </li> *@
+    @*                         <li class="nav-item"> *@
+    @*                             <form asp-controller="Home" asp-action="Logout" method="post" style="display:inline;"> *@
+    @*                                 <button type="submit" class="btn btn-link nav-link">Logout</button> *@
+    @*                             </form> *@
+    @*                         </li> *@
+    @*                     } *@
+    @*                     else *@
+    @*                     { *@
+    @*                         <li class="nav-item"> *@
+    @*                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button> *@
+    @*                         </li> *@
+    @*                     } *@
+    @*                 </ul> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </nav> *@
+    @* </header> *@
+
+
+
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -60,8 +120,8 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    // Redirect to the specified URL
-                    window.location.href = result.redirectUrl;
+                    // Reload the page to reflect the logged-in state
+                    location.reload();
                 } else {
                     // Display the error message
                     loginError.textContent = result.errorMessage;
@@ -73,6 +133,7 @@
             }
         });
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -26,9 +26,12 @@ namespace ST10372065_PROG7311.Services
 
         public async Task<User?> ValidateUserAsync(string email, string password)
         {
-            // Check if a user with the given email and password exists
+            // Log the query for debugging
+            _logger.LogInformation("Validating user with email: {email}", email);
+
+            // Perform a case-insensitive comparison for email
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower() && u.Password == password);
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
@@ -48,6 +51,13 @@ namespace ST10372065_PROG7311.Services
         }
 
         public async Task<User?> GetByIdAsync(int id) => await _context.Users.FindAsync(id);
+
+        public async Task<List<Product>> GetProductsByUserIdAsync(int userId)
+        {
+            return await _context.Products
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+        }
 
         public async Task UpdateAsync(User user)
         {

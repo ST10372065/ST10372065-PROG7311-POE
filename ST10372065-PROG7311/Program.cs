@@ -18,6 +18,14 @@ namespace ST10372065_PROG7311
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite("Data Source=local.db"));
 
+            // Add cookie-based authentication
+            builder.Services.AddAuthentication("Cookies")
+                .AddCookie("Cookies", options =>
+                {
+                    options.LoginPath = "/Home/Login"; // Path to the login page
+                    options.ExpireTimeSpan = TimeSpan.FromDays(7); // Cookie expiration time
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
