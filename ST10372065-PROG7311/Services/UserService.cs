@@ -41,9 +41,20 @@ namespace ST10372065_PROG7311.Services
 
         public async Task AddProductAsync(Product product)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                // Log the product details for debugging
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Product added: {@Product}", product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding product");
+                throw;
+            }
         }
+
 
         public async Task<User?> GetByEmailAsync(string email)
         {
