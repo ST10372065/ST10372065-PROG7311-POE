@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ST10372065_PROG7311.Models;
 using ST10372065_PROG7311.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ST10372065_PROG7311.Controllers
 {
@@ -99,15 +100,51 @@ namespace ST10372065_PROG7311.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Products()
+        public async Task<IActionResult> Products(int? farmerId = null, string category = null, DateOnly? startDate = null, DateOnly? endDate = null)
         {
             // Check if the user is authenticated
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Home");
             }
-            // fetch all the products from the database
-            var products = await _userService.GetAllProductsAsync();
+
+            // Get the current user
+            var user = await _userService.GetByEmailAsync(User.Identity.Name);
+
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            List<Product> products;
+
+            // If the user is a Farmer, only show their products (ignore filters)
+            if (User.IsInRole("Farmer"))
+            {
+                products = await _userService.GetProductsByUserIdAsync(user.UserId);
+            }
+            // If the user is an Employee, apply filters
+            else
+            {
+                products = await _userService.FilterProductsAsync(farmerId, category, startDate, endDate);
+
+                // Pass all farmers to the view for the dropdown
+                ViewBag.Farmers = await _userService.GetAllFarmersAsync();
+
+                // Get all distinct categories for the dropdown
+                var allProducts = await _userService.GetAllProductsAsync();
+                ViewBag.AllCategories = allProducts
+                    .Select(p => p.Category)
+                    .Distinct()
+                    .ToList();
+
+                // Pass the filter values to the view to maintain state
+                ViewBag.SelectedFarmerId = farmerId;
+                ViewBag.SelectedCategory = category;
+                ViewBag.StartDate = startDate;
+                ViewBag.EndDate = endDate;
+            }
+
             ViewBag.Products = products;
 
             return View();

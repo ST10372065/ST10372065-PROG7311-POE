@@ -80,6 +80,44 @@ namespace ST10372065_PROG7311.Services
                 .ToListAsync();
         }
 
+        public async Task<List<Product>> FilterProductsAsync(int? farmerId = null, string category = null, DateOnly? startDate = null, DateOnly? endDate = null)
+        {
+            // Start with all products, including User information
+            var query = _context.Products.Include(p => p.User).AsQueryable();
+
+            // Filter by farmer if specified
+            if (farmerId.HasValue)
+            {
+                query = query.Where(p => p.UserId == farmerId.Value);
+            }
+
+            // Filter by category if specified
+            if (!string.IsNullOrEmpty(category) && category != "All")
+            {
+                query = query.Where(p => p.Category == category);
+            }
+
+            // Filter by date range if specified
+            if (startDate.HasValue)
+            {
+                query = query.Where(p => p.Date >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(p => p.Date <= endDate.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<User>> GetAllFarmersAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role == "Farmer")
+                .ToListAsync();
+        }
+
         public async Task UpdateAsync(User user)
         {
             _context.Users.Update(user);

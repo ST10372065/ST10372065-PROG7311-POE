@@ -10,7 +10,14 @@
 </div>
 
 <!-- Centered Header -->
-<h1 class="text-center my-4">Products</h1>
+@if (User.IsInRole("Farmer"))
+{
+    <h1 class="text-center my-4">My Products</h1>
+}
+else
+{
+    <h1 class="text-center my-4">All Products</h1>
+}
 
 <!-- Display ModelState Errors -->
 @if (!ViewData.ModelState.IsValid)
@@ -22,6 +29,74 @@
                 <li>@error.ErrorMessage</li>
             }
         </ul>
+    </div>
+}
+
+<!-- Employee Filtering Options -->
+@if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
+{
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Filter Products</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="Products" class="row g-3">
+                <!-- Farmer Selection -->
+                <div class="col-md-6">
+                    <label for="farmerId" class="form-label">Farmer</label>
+                    <select name="farmerId" id="farmerId" class="form-select">
+                        <option value="">All Farmers</option>
+                        @if (ViewBag.Farmers != null)
+                        {
+                            @foreach (var farmer in ViewBag.Farmers)
+                            {
+                                <option value="@farmer.UserId" selected="@(ViewBag.SelectedFarmerId == farmer.UserId ? "selected" : null)">
+                                    @farmer.FirstName @farmer.LastName
+                                </option>
+                            }
+                        }
+                    </select>
+                </div>
+                
+                <!-- Category Selection -->
+                <div class="col-md-6">
+                    <label for="category" class="form-label">Category</label>
+                    <select name="category" id="category" class="form-select">
+                        @* <option value="All" @(ViewBag.SelectedCategory == null || ViewBag.SelectedCategory == "All" ? "selected" : "")>All Categories</option> *@
+                        <option value="Crop Seeds" selected="@(ViewBag.SelectedCategory == "Crop Seeds" ? "selected" : null)">Crop Seeds</option>
+                        <option value="Educational" selected="@(ViewBag.SelectedCategory == "Educational" ? "selected" : null)">Educational</option>
+                        <option value="Automation" selected="@(ViewBag.SelectedCategory == "Automation" ? "selected" : null)">Automation</option>
+                        <option value="Solar" selected="@(ViewBag.SelectedCategory == "Solar" ? "selected" : null)">Solar</option>
+                        <option value="Collaboration" selected="@(ViewBag.SelectedCategory == "Collaboration" ? "selected" : null)">Collaboration</option>
+                        <option value="Other" selected="@(ViewBag.SelectedCategory == "Other" ? "selected" : null)">Other</option>
+                    </select>
+                </div>
+                
+                <!-- Date Range -->
+                <div class="col-md-6">
+                    <label for="startDate" class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" 
+                           value="@(ViewBag.StartDate != null ? ViewBag.StartDate.ToString("yyyy-MM-dd") : "")" />
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="endDate" class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" 
+                           value="@(ViewBag.EndDate != null ? ViewBag.EndDate.ToString("yyyy-MM-dd") : "")" />
+                </div>
+                
+                <!-- Filter and Reset Buttons -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="@Url.Action("Products")" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="alert alert-info mb-5">
+        <h4>Employee Access</h4>
+        <p>As an employee, you can view all farmer products. Only farmers can add products.</p>
     </div>
 }
 
@@ -63,13 +138,6 @@
         </form>
     </div>
 }
-else if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
-{
-    <div class="alert alert-info mb-5">
-        <h4>Employee Access</h4>
-        <p>As an employee, you can view products but cannot add new ones. Only farmers can add products.</p>
-    </div>
-}
 
 <hr />
 
@@ -88,6 +156,10 @@ else if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
                             <p class="card-text">Category: @product.Category</p>
                             <p class="card-text">Price: R @product.Price</p>
                             <p class="card-text"><small class="text-muted">Produced on: @product.Date.ToString("yyyy-MM-dd")</small></p>
+                            @if (User.IsInRole("Employee"))
+                            {
+                                <p class="card-text"><small class="text-primary">Farmer: @product.User.FirstName @product.User.LastName</small></p>
+                            }
                         </div>
                     </div>
                 </div>
@@ -96,7 +168,14 @@ else if (User.Identity.IsAuthenticated && User.IsInRole("Employee"))
         else
         {
             <div class="col-12">
-                <p class="text-center">No products available.</p>
+                @if (User.IsInRole("Farmer"))
+                {
+                    <p class="text-center">You haven't added any products yet.</p>
+                }
+                else
+                {
+                    <p class="text-center">No products available.</p>
+                }
             </div>
         }
     </div>
