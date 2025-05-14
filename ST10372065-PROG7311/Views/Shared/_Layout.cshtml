@@ -131,14 +131,20 @@
                     body: formData
                 });
 
-                const result = await response.json();
+                // Defensive: check if response is JSON
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    const result = await response.json();
 
-                if (result.success) {
-                    // Reload the page to reflect the logged-in state
-                    location.reload();
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        loginError.textContent = result.errorMessage || "Login failed.";
+                        loginError.classList.remove("d-none");
+                    }
                 } else {
-                    // Display the error message
-                    loginError.textContent = result.errorMessage;
+                    // Not JSON, show a generic error
+                    loginError.textContent = "Unexpected server response. Please try again.";
                     loginError.classList.remove("d-none");
                 }
             } catch (error) {
@@ -146,43 +152,8 @@
                 loginError.classList.remove("d-none");
             }
         });
-
-        // Optional: AJAX for Register Farmer (similar to login)
-        // const registerFarmerForm = document.getElementById("registerFarmerForm");
-        // if (registerFarmerForm) {
-        //     registerFarmerForm.addEventListener("submit", async function (e) {
-        //         e.preventDefault();
-
-        //         const form = e.target;
-        //         const formData = new FormData(form);
-        //         const errorDiv = document.getElementById("registerFarmerError");
-
-        //         try {
-        //             const response = await fetch(form.action, {
-        //                 method: "POST",
-        //                 body: formData
-        //             });
-
-        //             if (response.redirected) {
-        //                 If the server redirects, reload the page
-        //                 window.location.href = response.url;
-        //                 return;
-        //             }
-
-        //             If you return JSON, handle it here
-        //             const result = await response.json();
-        //             if (result.success) { ... }
-
-        //             For now, just close the modal on success
-        //             $('#registerFarmerModal').modal('hide');
-        //             location.reload();
-        //         } catch (error) {
-        //             errorDiv.textContent = "An unexpected error occurred. Please try again.";
-        //             errorDiv.classList.remove("d-none");
-        //         }
-        //     });
-        // }
     </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
