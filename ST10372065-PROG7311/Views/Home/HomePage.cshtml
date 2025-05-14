@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var showErrorModal = TempData["ErrorMessage"] != null;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
 <!DOCTYPE html>
@@ -9,19 +11,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Agri-Energy Connect</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
-<body> 
-@*     <div class="menu-toggle">☰</div> *@
+<body>
 
-@*     <nav class="nav-container"> *@
-@*     <div class="close-btn">×</div> *@
-@*     <ul class="nav-menu"> *@
-@*         <li><a href="#home">Home</a></li> *@
-@*         <li><a href="/Home/Products">Products</a></li> *@
-@*         <li><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li> *@
-@*     </ul> *@
-@* </nav> *@
-
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title" id="errorModalLabel">Access Denied</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    @errorMessage
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Log In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="main-content">
         <div class="hero-section">
@@ -52,21 +64,37 @@
         </div>
     </div>
 
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Show the error modal if needed
+        document.addEventListener("DOMContentLoaded", function () {
+            var showErrorModal = @(showErrorModal.ToString().ToLower());
+            if (showErrorModal) {
+                var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
+            }
+        });
+
+        // Existing nav bar JS
         const navContainer = document.querySelector('.nav-container');
         const menuToggle = document.querySelector('.menu-toggle');
         const closeBtn = document.querySelector('.close-btn');
 
-        menuToggle.addEventListener('click', () => {
-            navContainer.classList.add('nav-active');
-        });
+        if (menuToggle && navContainer) {
+            menuToggle.addEventListener('click', () => {
+                navContainer.classList.add('nav-active');
+            });
+        }
 
-        closeBtn.addEventListener('click', () => {
-            navContainer.classList.remove('nav-active');
-        });
+        if (closeBtn && navContainer) {
+            closeBtn.addEventListener('click', () => {
+                navContainer.classList.remove('nav-active');
+            });
+        }
 
         document.addEventListener('click', (e) => {
-            if (!navContainer.contains(e.target) && !menuToggle.contains(e.target)) {
+            if (navContainer && menuToggle &&
+                !navContainer.contains(e.target) && !menuToggle.contains(e.target)) {
                 navContainer.classList.remove('nav-active');
             }
         });

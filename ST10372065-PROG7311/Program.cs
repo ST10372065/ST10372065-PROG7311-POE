@@ -22,7 +22,7 @@ namespace ST10372065_PROG7311
             builder.Services.AddAuthentication("Cookies")
                 .AddCookie("Cookies", options =>
                 {
-                    options.LoginPath = "/Home/Login"; // Path to the login page
+                    options.LoginPath = "/Home/HomePage"; // Path to the home page
                     options.ExpireTimeSpan = TimeSpan.FromDays(7); // Cookie expiration time
                 });
 

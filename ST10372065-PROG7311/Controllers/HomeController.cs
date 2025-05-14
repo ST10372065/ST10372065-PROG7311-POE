@@ -99,13 +99,15 @@ namespace ST10372065_PROG7311.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Products(int? farmerId = null, string category = null, DateOnly? startDate = null, DateOnly? endDate = null)
         {
             // Check if the user is authenticated
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login", "Home");
+                TempData["ErrorMessage"] = "You must be logged in to view products.";
+                return RedirectToAction("HomePage");
             }
 
             // Get the current user
@@ -113,12 +115,12 @@ namespace ST10372065_PROG7311.Controllers
 
             if (user == null)
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("HomePage");
             }
 
             List<Product> products;
 
-            // If the user is a Farmer, only show their products (ignore filters)
+            // If the user is a Farmer, only show their products 
             if (User.IsInRole("Farmer"))
             {
                 products = await _userService.GetProductsByUserIdAsync(user.UserId);
@@ -161,7 +163,7 @@ namespace ST10372065_PROG7311.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("HomePage");
             }
 
             if (ModelState.IsValid)
