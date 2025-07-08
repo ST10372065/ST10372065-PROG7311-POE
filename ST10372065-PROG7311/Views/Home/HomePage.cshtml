@@ -15,6 +15,9 @@
 </head>
 <body>
 
+
+    
+
     <!-- Error Modal -->
     <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -33,6 +36,17 @@
                 </div>
             </div>
         </div>
+    </div>
+    
+    <<!-- Info Image (top right) -->
+    <div style="position: absolute; top: 1rem; right: 1.5rem; z-index: 1050;">
+        <img src="~/images/assets/sydney1.jpeg"
+             alt="Information"
+             class="info-image"
+             data-bs-toggle="tooltip"
+             data-bs-placement="left"
+             title="This is the Agri-Energy Connect home page."
+             style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; cursor: pointer; border: 2px solid #0dcaf0;" />
     </div>
 
     <div class="main-content">
@@ -62,6 +76,7 @@
                 <p>Connect with experts and access funding opportunities for joint sustainable agriculture initiatives.</p>
             </div>
         </div>
+
     </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -73,6 +88,12 @@
                 var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
                 errorModal.show();
             }
+
+            // Enable Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
 
         // Existing nav bar JS
