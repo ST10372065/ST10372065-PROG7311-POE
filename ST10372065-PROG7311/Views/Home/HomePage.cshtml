@@ -15,9 +15,6 @@
 </head>
 <body>
 
-
-    
-
     <!-- Error Modal -->
     <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -37,16 +34,30 @@
             </div>
         </div>
     </div>
-    
-    <<!-- Info Image (top right) -->
-    <div style="position: absolute; top: 1rem; right: 1.5rem; z-index: 1050;">
+
+    <!-- Dropdown Info Image (top right) -->
+    <div class="dropdown-container">
         <img src="~/images/assets/sydney1.jpeg"
              alt="Information"
              class="info-image"
              data-bs-toggle="tooltip"
              data-bs-placement="left"
-             title="This is the Agri-Energy Connect home page."
-             style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%; cursor: pointer; border: 2px solid #0dcaf0;" />
+             title="Hover to see options" />
+
+        <div class="dropdown-menu-custom">
+            <a href="#" class="dropdown-item-custom">
+                <img src="~/images/assets/addison1.jpg" alt="Option 1" />
+                <span>Farming Guide</span>
+            </a>
+            <a href="#" class="dropdown-item-custom">
+                <img src="~/images/assets/addison2.jpg" alt="Option 2" />
+                <span>Energy Solutions</span>
+            </a>
+            <a href="#" class="dropdown-item-custom">
+                <img src="~/images/assets/addison3.jpg" alt="Option 3" />
+                <span>Community Hub</span>
+            </a>
+        </div>
     </div>
 
     <div class="main-content">

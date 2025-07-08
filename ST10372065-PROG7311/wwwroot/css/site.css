@@ -131,3 +131,82 @@ body {
     color: white;
     cursor: pointer;
 }
+
+/* Dropdown Styles */
+.dropdown-container {
+    position: absolute;
+    top: 1rem;          /* 16px from the top of the page */
+    right: 1.5rem;      /* 24px from the right edge of the page */
+    z-index: 1050;      /* High z-index to appear above other content */
+}
+
+
+/* The dropdown menu that appears on hover - initially hidden */
+.dropdown-menu-custom {
+    position: absolute;
+    top: 50px; /* Positioned 50px below the trigger image */
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6; /* Light gray border around the dropdown */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 8px;
+    opacity: 0; /* Start completely transparent (hidden) */
+    visibility: hidden; /* Hidden from screen readers and interactions */
+    transform: translateY(-10px); /* Start 10px higher for slide-down animation */
+    transition: all 0.3s ease; /* Smooth transition for all properties over 0.3 seconds */
+    min-width: 200px; /* Minimum width to prevent cramped appearance */
+}
+
+/* Show the dropdown when hovering over the container */
+.dropdown-container:hover .dropdown-menu-custom {
+    opacity: 1;
+    visibility: visible; /* Make dropdown interactive and accessible */
+    transform: translateY(0); /* Move to final position (slide down effect) */
+}
+
+
+/* Individual dropdown items (each option in the dropdown) */
+.dropdown-item-custom {
+    display: flex; /* Use flexbox for horizontal alignment */
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none; /* Remove underline from links */
+    color: #333;
+    border-radius: 4px; /* Rounded corners for each item */
+    transition: background-color 0.2s ease; /* Smooth background color change on hover */
+    margin-bottom: 4px; /* Small gap between dropdown items */
+}
+
+    /* Hover effect for dropdown items */
+    .dropdown-item-custom:hover {
+        background-color: #f8f9fa;
+        color: #333;
+        text-decoration: none; /* Ensure no underline appears on hover */
+    }
+
+    /* Images within dropdown items */
+    .dropdown-item-custom img {
+        width: 30px; /* Fixed width for consistency */
+        height: 30px; /* Fixed height for consistency */
+        object-fit: cover; /* Crop image to fit without distortion */
+        border-radius: 50%; /* Make images circular */
+        margin-right: 10px; /* Space between image and text */
+        border: 2px solid #0dcaf0; /* Cyan border around each image */
+    }
+
+/* The main trigger image that activates the dropdown */
+.info-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%; /* Make image circular */
+    cursor: pointer; /* Show pointer cursor to indicate interactivity */
+    border: 2px solid #0dcaf0; /* Cyan border around the trigger image */
+    transition: transform 0.2s ease; /* Smooth scale animation on hover */
+}
+
+/* Scale effect for the trigger image when hovering over the container */
+.dropdown-container:hover .info-image {
+    transform: scale(1.1); /* Increase size by 10% to indicate hover state */
+}
